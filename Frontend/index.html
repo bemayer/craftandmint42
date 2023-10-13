@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css" />
+    <title>Simple SPA Menu</title>
+    <style>
+      .content {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul id="menu">
+          <li><a class="menu-item" data-target="set-up">Content 1</a></li>
+          <li><a class="menu-item" data-target="content2">Content 2</a></li>
+          <li><a class="menu-item" data-target="content3">Content 3</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <div id="set-up" class="content">
+        <form id="keys-form">
+          <header><h1>Set up</h1></header>
+          <label for="contract-address">Contract Address:</label><br />
+          <input
+            type="text"
+            id="contract-address"
+            name="contract-address"
+          /><br />
+          <label for="api-key">OpenAI API Key:</label><br />
+          <input type="text" id="api-key" name="api-key" /><br />
+          <button type="submit">Submit</button>
+        </form>
+        <dialog id="error-address">
+          <p>Invalid contract address</p>
+          <button id="close-error-address">Close</button>
+        </dialog>
+        <dialog id="error-api-key">
+          <p>Invalid OpenAI API key</p>
+          <button id="close-error-api-key">Close</button>
+        </dialog>
+      </div>
+      <div id="content2" class="content">This is content 2.</div>
+      <div id="content3" class="content">This is content 3.</div>
+    </main>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", initializeMenu);
+
+      /**
+       * Initialize the menu.
+       */
+      function initializeMenu() {
+        const menuItems = document.querySelectorAll(".menu-item");
+        menuItems.forEach((item, idx) => {
+          if (idx === 0) displayContent(item.getAttribute("data-target"));
+          item.addEventListener("click", (event) => {
+            const targetContent = event.target.getAttribute("data-target");
+            displayContent(targetContent);
+          });
+        });
+      }
+
+      /**
+       * Display content based on the menu item clicked.
+       * @param {string} contentID - The ID of the content to display.
+       */
+      function displayContent(contentID) {
+        const allContent = document.querySelectorAll(".content");
+        allContent.forEach(function (content) {
+          content.style.display = "none";
+        });
+
+        const selectedContent = document.getElementById(contentID);
+        selectedContent.style.display = "block";
+      }
+
+      document.getElementById("keys-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        checkKeys();
+      });
+
+      async function checkKeys() {
+        const apiKey = document.getElementById("api-key").value;
+        if (!(await checkDreamStudioBalance(apiKey))) {
+          document.getElementById("error-api-key").show();
+        }
+      }
+
+      async function checkDreamStudioBalance(apiKey) {
+        const url = "https://api.stability.ai/v1/user/balance";
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const { credits } = await response.json();
+          console.log("credits: ", credits);
+          return credits > 0;
+        } catch (error) {
+          console.error(error);
+          return false;
+        }
+      }
+    </script>
+  </body>
+</html>
