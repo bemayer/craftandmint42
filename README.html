@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+<link rel="stylesheet" href="file:///c:\Users\bmayer\.vscode\extensions\goessner.mdmath-2.7.4\themes\default\style.css">
+
+</head>
+<body class="markdown-body">
+<h1 dir="auto" id="craftandmint42">CraftAndMint42</h1>
+<h2 dir="auto" id="overview">Overview</h2>
+<p dir="auto"><em>CraftAndMint42</em> is a blockchain-based project created as part of the Tokenizer assignment at 42 school. The subject of this project was designed with insights from <a href="https://www.bnbchain.org/">BNB Chain</a>, the world's largest smart-contract blockchain. It aims to train students building a practical experience in blockchain technology by establishing their own token ecosystem.</p>
+<h2 dir="auto" id="project-name">Project Name</h2>
+<p dir="auto">The project is called <em>CraftAndMint42</em>, a name that blends the two main features. &quot;Craft&quot; refers to the use of the AI tool MemberStudio to create unique images from a prompt. &quot;Mint&quot; is about turning these images into unique, blockchain-based Non-Fungible Tokens (NFTs).</p>
+<h2 dir="auto" id="blockchain-platform">Blockchain Platform</h2>
+<p dir="auto"><em>CraftAndMint42</em> is developed on the Ethereum blockchain, owing to its robustness, large community, and extensive developer tools.</p>
+<h2 dir="auto" id="programming-language-and-tools">Programming Language and Tools</h2>
+<ul dir="auto">
+<li dir="auto"><em>Language</em>: Solidity</li>
+<li dir="auto"><em>IDE</em>: Visual Studio Code</li>
+<li dir="auto"><em>Development environment</em>: Harhat // Answer what it s a development environment and why this choice (use NodeJS, npm, TypeScript support, comprehensive framework etc.)</li>
+</ul>
+<h2 dir="auto" id="security-measures">Security Measures</h2>
+<p dir="auto">Several security measures have been implemented to ensure the safe and reliable operation of the token:
+Ownership controls for administrative tasks
+Role-based access to limit privileges
+Audited code to minimize vulnerabilities</p>
+<h2 dir="auto" id="smart-contract-address-and-network">Smart Contract Address and Network</h2>
+<ul dir="auto">
+<li dir="auto"><em>Smart Contract Address</em>: 0x123...</li>
+<li dir="auto"><em>Network</em>: BNB Smart Chain Testnet</li>
+</ul>
+<h2 dir="auto" id="token-ticker">Token Ticker</h2>
+<p dir="auto">The ticker symbol for the token within the CraftAndMint42 ecosystem is CM42.</p>
+<h2 dir="auto" id="purpose-and-use-cases">Purpose and Use-Cases</h2>
+<p dir="auto">The token serves several purposes within the MintAndCraft42 ecosystem:</p>
+<h2 dir="auto" id="documentation">Documentation</h2>
+<p dir="auto">In the documentation folder, you will find the following all my notes:</p>
+<ul dir="auto">
+<li dir="auto">Overview of the Ethereum blockchain, the ERC-721 standard, and the process of developing a smart contract</li>
+<li dir="auto">Mathematical refreshers on cryptography and hashing
+<ul dir="auto">
+<li dir="auto">Public-Key Cryptography: Ethereum uses Elliptic Curve Digital Signature Algorithm (ECDSA) for generating public-private key pairs. This allows users to sign transactions and helps to verify the identity of the sender.</li>
+<li dir="auto">Hash Functions: Cryptographic hash functions like Keccak-256 are widely used in Ethereum. They take an input and return a fixed-size string of bytes, typically a digest that represents the data. They are used for data integrity checks and in the formation of Merkle Trees.</li>
+</ul>
+</li>
+</ul>
+<h1 dir="auto" id="sample-hardhat-project">Sample Hardhat Project</h1>
+<p dir="auto">This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.</p>
+<p dir="auto">Try running some of the following tasks:</p>
+<pre><code class="code-line language-shell" dir="auto"><div>npx hardhat <span class="hljs-built_in">help</span>
+npx hardhat <span class="hljs-built_in">test</span>
+REPORT_GAS=<span class="hljs-literal">true</span> npx hardhat <span class="hljs-built_in">test</span>
+npx hardhat node
+npx hardhat run scripts/deploy.ts
+</div></code></pre>
+<h1 dir="auto" id="ideas-of-table-of-content-for-the-documentation">Ideas of table of content for the documentation</h1>
+<p dir="auto">Document 1: General Overview Focused on Code
+Table of Contents
+Introduction</p>
+<p dir="auto">Brief explanation of what Ethereum is
+Purpose of the document
+Understanding Ethereum</p>
+<p dir="auto">Definition and Historical Background
+How It Differs from Other Blockchains
+Smart Contracts</p>
+<p dir="auto">Definition and Importance
+Languages Used (Solidity, Vyper)
+Ethereum Virtual Machine (EVM)</p>
+<p dir="auto">Role in Ethereum
+How Smart Contracts are Executed
+ERC-721 Standard</p>
+<p dir="auto">Introduction to Tokens
+What Makes ERC-721 Unique
+Real-World Use-Cases (e.g., NFTs)
+Developing a Smart Contract</p>
+<p dir="auto">Setting up the Development Environment
+Writing a Basic ERC-721 Smart Contract
+Testing the Smart Contract
+Deploying to Ethereum Network
+NFTs and ERC-721</p>
+<p dir="auto">How NFTs Use ERC-721
+Your School Project: An Overview
+Tools and Libraries</p>
+<p dir="auto">Truffle, Hardhat, etc.
+Web3.js and Ethers.js
+Security Considerations</p>
+<p dir="auto">Common Pitfalls
+How to Secure Your Smart Contracts
+Conclusion</p>
+<p dir="auto">Summary
+Further Resources
+Appendices
+Code Samples
+Glossary
+Document 2: Mathematical Concepts in Ethereum
+Table of Contents
+Introduction</p>
+<p dir="auto">Brief Explanation of Why Mathematics is Important in Ethereum
+Purpose of the Document
+Public-Key Cryptography</p>
+<p dir="auto">Historical Background
+Elliptic Curve Digital Signature Algorithm (ECDSA)
+Applications in Ethereum
+Hash Functions</p>
+<p dir="auto">What is a Hash Function?
+Properties of Cryptographic Hash Functions
+Keccak-256 in Ethereum
+Merkle Trees</p>
+<p dir="auto">Basics and Definitions
+How Ethereum Utilizes Merkle Trees
+Zero-Knowledge Proofs</p>
+<p dir="auto">Fundamentals
+Applications in Ethereum Scaling and Privacy
+Consensus Algorithms</p>
+<p dir="auto">Proof of Work (Mathematical Foundation)
+Proof of Stake (Mathematical Foundation)
+Formal Verification</p>
+<p dir="auto">Role in Smart Contracts
+Mathematical Methods Used
+Conclusion</p>
+<p dir="auto">Summary of Mathematical Concepts
+Importance in Future Developments
+Appendices</p>
+<p dir="auto">Mathematical Proofs
+Glossary</p>
+
+P \approx (\frac{q}{p})^
+
+</math>
+
+</body>
+</html>
