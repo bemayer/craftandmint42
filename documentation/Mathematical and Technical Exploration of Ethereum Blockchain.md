@@ -71,7 +71,7 @@ A small change in the input should result in a significant change in the output.
 
 $$
 \forall x, y \in \mathcal{M}, x \neq y \Rightarrow H(x) \neq H(y) \text{ and } d(H(x), H(y)) \approx \frac{|H(\mathcal{M})|}{2}
-$$  
+$$
 
 where \(d\) is the Hamming distance.
 
@@ -118,7 +118,7 @@ For any node $v$ at depth $d$:
 
 ### Properties
 
-#### Data integrity 
+#### Data integrity
 
 Changing a single data block necessitates the recalculation of hashes up to the root, making data tampering evident.
 
@@ -172,7 +172,40 @@ graph TD
 
 ## Elliptic curve cryptography
 
+Elliptic curves are a fundamental part of the cryptographic algorithms used in Ethereum, specifically for generating and managing cryptographic keys and signatures.
+
+### Definition of elliptic curves
+
+Elliptic curves are a type of algebraic curve define over a field $F$ by an equation of the form:
+
+$$
+y^2 = x^3 + ax + b
+$$
+
+where $a$ and $b$ are constants are elements of $F$ and $4a^3 + 27b^2 \neq 0$, ensuring that the curve has no singular points (i.e. no cusps or self-intersections).
+
+This is referred to as the **Weierstrass equation**.
+
+In the case of the Ethereum we use the curve secp256k1, where $a = 0$ and $b = 7$.
+
+$$
+y^2 = x^3 + 7
+$$
+
+### Elliptic curve on a finite field
+
+
+
+
 ### Properties of elliptic curves
+
+#### Addition on an elliptic curve
+
+
+
+
+![Elliptic Curve Addition](./Elliptic_Curve_Addition.png)
+
 
 ### Digital signatures
 
