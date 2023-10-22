@@ -1,5 +1,5 @@
 
-# Mathematical and Technical Exploration of Ehtereum Blockchain
+# Mathematical and Technical Exploration of Ethereum Blockchain
 
 ## Hash functions and Merkle Trees
 
@@ -113,16 +113,16 @@ A Merkle tree $T$ can be represented as a complete binary tree where eahc node $
 
 For any node $v$ at depth $d$:
 
-- If $v$ is a lead node, then $H(V) = H(D(V))$, where $D(v)$ is the data block associated with the leaf node.
-- If $v$ is an internal node with childer $l$ and $r$, then $H(v) = H(H(l) + H(r))$.
+- If $v$ is a leaf node, then $H(V) = H(D(V))$, where $D(v)$ is the data block associated with the leaf node.
+- If $v$ is an internal node with children $l$ and $r$, then $H(v) = H(H(l) + H(r))$.
 
 ### Properties
 
-#### Data integrity
+#### Data Integrity
 
 Changing a single data block necessitates the recalculation of hashes up to the root, making data tampering evident.
 
-#### Efficient verification
+#### Efficient Verification
 
 Given a data block and its pathway to the root, the integrity of the data block can be verified without examining the entire tree.
 
@@ -132,7 +132,7 @@ Branches of the tree can be summarized into a single hash, reducing the amount o
 
 ### Example: a Simple Merkle Tree
 
-Consider a simple Mergkle tree with 4 leafs $L_1$, $L_2$, $L_3$, $L_4$.
+Consider a simple Merkle tree with 4 leafs $L_1$, $L_2$, $L_3$, $L_4$.
 
 $$
 \forall i \in \{1, 2, 3, 4\} : H_i = H(L_i)
@@ -170,11 +170,11 @@ graph TD
     H4 --> L4
 ```
 
-## Elliptic curve cryptography
+## Elliptic Curves
 
 Elliptic curves are a fundamental part of the cryptographic algorithms used in Ethereum, specifically for generating and managing cryptographic keys and signatures.
 
-### Definition of elliptic curves
+### Definition of Elliptic Curves
 
 Elliptic curves are a type of algebraic curve define over a field $F$ by an equation of the form:
 
@@ -187,11 +187,12 @@ where $a$ and $b$ are constants are elements of $F$ and $4a^3 + 27b^2 \neq 0$, e
 This is referred to as the **Weierstrass equation**.
 
 
-### Elliptic curve on a finite field
+### Elliptic Curve on a Finite Field
 
 When elliptic curves are used in cryptography they are often defined over finite fields, which are set of numbers with a finite count. There are two types of finite fields: prime fields ($\mathbb{F}_p$) and binary fields ($\mathbb{F}_{2^m}$). The field used in Ethereum is a prime field.
 
-### Elliptic curve over a prime field ($\mathbb{F}_p$)
+
+### Elliptic Curve over a Finite Prime Field ($\mathbb{F}_p$)
 
 In a prime field $\mathbb{F}_p$, where $p$ is a prime number, the elements are integers in the range $\{0, 1, \ldots, p-1\}$.
 
@@ -201,15 +202,19 @@ $$
 y^2 = (x^3 + ax + b) \mod p
 $$
 
-### Example: secp256k1 Curve
+### Example: *secp256k1* Curve
 
-In the case of the Ethereum, we use the curve secp256k1, which is standardized here: [Standards for Efficient Cryptography Group (SECG)](http://www.secg.org/sec2-v2.pdf).
+In the case of the Ethereum, the equation of the *secp256k1* curve is used. It is defined over the finite field $\mathbb{F}_p$:
 
 $$
-y^2 = x^3 + 7 \mod 2^{256} - 2^{32} - 2^9 - 2^8 - 2^7 - 2^6 - 2^4 - 1
+y^2 = x^3 + 7 \mod p
 $$
 
-### Addition on an elliptic curve
+$$
+p = 2^{256} - 2^{32} - 2^9 - 2^8 - 2^7 - 2^6 - 2^4 - 1
+$$
+
+### Addition on an Elliptic Curve
 
 Point addition on an elliptic curve is a fundamental operation that underpins elliptic curve cryptography. It is a way to combine two points on the curve to get a third point, also on the curve. This operation has a geometric interpretation involving lines intersecting the curve.
 
@@ -312,15 +317,15 @@ When you add any point on the elliptic curve to the point at infinity, you get t
 
 ### Discrete Logarithm Problem (DLP)
 
-#### Point multiplication by a scalar
+#### Point Multiplication by a Scalar
 
 - Point multiplication is the operation of adding a point to itself a specified number of times.
 
-- For example, $P + P + \ldots + P = \lambda P$, where $P$ is added $n$ times.
+- For example, $P + P + \ldots + P = n P$, where $P$ is added $n$ times.
 
 - The addition is not efficient for large value of $n$. However, it can be made efficient using the double-and-add algorithm.
 
-#### Double-and-add algorithm
+#### Double-and-add Algorithm
 
 1. Convert the scalar $\lambda$ to its binary representation.
 
@@ -347,15 +352,184 @@ This algorithm is efficient because it only requires $O(\log_2 \lambda)$ point a
 
 > The essence of the discrete logarithm problem is that while it is straightforward to compute $Q$ given $\lambda$ and $P$ through the expression $Q=\lambda P$, reversing this process to determine the scalar $\lambda$ given $Q$ and $P$ is computationally very challenging. This asymmetry forms the foundation for the security underpinning elliptic curve cryptography.
 
-To give an estimate the point addition whose code is given below took $57\mu s$ to execute on my computer. This means that it would take $57\mu s \times 2^{256} \approx 10^{70}$ years to compute the discrete logarithm problem for the secp256k1 curve, i.e. with a scalar of 256 bits.
+To give an estimate the point addition whose code is given below took $57\mu s$ to execute on my computer. This means that it would take $57\mu s \times 2^{256} \approx 10^{70}$ years to compute the discrete logarithm problem for the *secp256k1* curve, i.e. with a scalar of 256 bits.
 
 Using the Double-and-add method, we can compute $\lambda P$ in $O(\log_2 \lambda)$ point additions and doublings. It would take $57\mu s \times 256 \approx 15ms$ to compute.
 
-### Digital signatures
+## Elliptic Curve Cryptography (ECC) in Ethereum
 
-### Public key cryptography
+Elliptic Curve Cryptography (ECC) forms the bedrock of Ethereum's security and identity management. Through the use of elliptic curves, Ethereum is able to provide unique digital identities to users, secure transactions, and ensure the integrity and authenticity of data. The chosen elliptic curve for Ethereum is *secp256k1*, which is defined over a finite field and provides a good balance between security and performance.
 
-## Annex: Calculating the time complexity of the elliptic curve addition
+### Base Point and its Order
+
+In elliptic curve cryptography, a base point $G$ is a fixed point on the curve that is used to generate a public key from a private key. The base point is also known as the generator point.
+
+The order of the base point, denoted as $n$, is a fundamental characteristic of the elliptic curve group. It is the smallest positive integer such that $nG = \mathcal{O}$, where $\mathcal{O}$ is the point at infinity.
+
+The base point $G$ generates all other elements of the group through repeated additions of $G$ to itself. Each iteration of adding $G$ to itself generates a new element in the group, and this process can be repeated until we circle back to the starting point, $G$. This iterative generation of group elements by the repetitive addition of the base point $G$ to itself creates a cyclic structure, forming a cyclic group.
+
+A cyclic group is defined by the property that all elements in the group can be generated by iterating the group operation on a particular element, the generator (in this case, $G$), of the group. In the context of elliptic curve cryptography, the group operation is point addition.
+
+Formally, a group $\mathcal{G}$ is termed cyclic if there exists an element $G$ in $\mathcal{G}$ such that:
+
+$$
+\forall g \in \mathcal{G}, \exists \lambda \in \mathbb{Z}_{\geq 0} : g = \lambda G
+$$
+
+The order of $G$, symbolized as $n$, is pivotal since it shapes the cyclic subgroup spawned by $G$. It is defined as the smallest positive integer satisfying $nG = \mathcal{O}$, with $\mathcal{O}$ representing the point at infinity, serving as the group's identity element. The cyclic subgroup $\langle G \rangle$ encompasses all points derivable from iterative additions of $G$, expressed as $\langle G \rangle = \{ G, 2G, 3G, \ldots, (n-1)G \}$. Both the cyclic subgroup and $G$ share the order $n$, indicating the presence of $n$ unique elements within the subgroup $\langle G \rangle$ created by $G$.
+
+For the *secp256k1* curve, the base point $G$ is defined as:
+
+$$
+G = (55066263022277343669578718895168534326250603453777594175500187360389116729240,\\
+32670510020758816978083085130507043184471273380659243275938904335757337482424)
+$$
+
+And its order $n$ is:
+
+$$
+n = 115792089237316195423570985008687907852837564279074904382605163141518161494337
+$$
+
+Another value given for *secp256k1* curve is its cofactor $h$, which is defined as:
+
+$$
+h = \frac{\#E(\mathbb{F}_p)}{n}
+$$
+
+where $\#E(\mathbb{F}_p)$ is the number of points on the curve over the field $\mathbb{F}_p$.
+
+For *secp256k1*, $h = 1$, meaning that the number of points on the curve is equal to the order of the base point.
+
+### Full Standards for *secp256k1*
+
+According to the standards defining the *secp256k1* curve ([Standards for Efficient Cryptography Group (SECG)](http://www.secg.org/sec2-v2.pdf)):
+
+> The elliptic curve domain parameters over $\mathbb{F}_p$ associated with a Koblitz curve secp256k1 are specified by the sextuple T = (p, a, b, G, n, h)
+
+The six parameters are now have been defined, as a reminder:
+- $p$ is the prime number defining the finite field $\mathbb{F}_p$.
+
+$$
+p = 2^{256} - 2^{32} - 2^9 - 2^8 - 2^7 - 2^6 - 2^4 - 1
+$$
+
+- $a$ and $b$ are the constants in the Weierstrass equation.
+
+$$
+a = 0
+$$
+
+$$
+b = 7
+$$
+
+$$
+y^2 = x^3 + 7 \mod p
+$$
+
+- $G$ is the base point.
+
+$$
+G = (\texttt{79BE667E F9DCBBAC 55A06295 CE870B07 029BFCDB 2DCE28D9 59F2815 B16F81798}
+,\\ \texttt{483ADA77 26A3C465 5DA4FBFC 0E1108A8 FD17B448 A6855419 9C47D08F FB10D4B8})
+$$
+
+- $n$ is the order of the base point.
+
+$$
+n = \texttt{0xFFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141}
+$$
+
+- $h$ is the cofactor.
+
+$$
+h = 1
+$$
+
+### Key Generation
+
+#### Private Key
+
+A private key is a randomly selected scalar from the range $[1, n-1]$, where $n$ is the order of the elliptic curve group. The private key is used to generate the public key.
+
+The space of possible private keys is vast due to the high order of the elliptic curve, making it computationally infeasible to guess or brute force a private key.
+
+#### Public Key
+
+A public key is a point on the elliptic curve that is generated by multiplying the base point $G$ by the private key.
+
+$$
+\text{Public Key} = \text{Private Key} ⋅ G
+$$
+
+
+### The Elliptic Curve Digital Signature Algorithm
+
+The Elliptic Curve Digital Signature Algorithm (ECDSA) is a cryptographic algorithm used to generate digital signatures, which ensure the authenticity and integrity of data. Here's an outline of how ECDSA operates.
+
+In the steps below, $H(m)$ refers to the hash of a message $m$ that is to be signed, and the opration $H(m)$ is assumed to be a cryptographic hash function.
+
+#### Signature Generation
+
+To sign a message $m$ using the $\text{Private Key}$:
+
+1. Choose a random scalar $\lambda$ from the range $[1, n-1]$
+2. Compute the point $P$ on the elliptic curve:
+$$
+R = \lambda G
+$$
+3. With $R=(x_r,y_r)$, check that $r = x_r \mod n \neq 0$, if so, go back to step 1.
+
+4. Compute the signature $s$, if $s = 0$, go back to step 1:
+$$
+s = \lambda^{-1}(H(m) + r \cdot \text{Private Key}) \mod n
+$$
+5. The signature is the pair $(r, s)$.
+
+#### Signature Verification
+
+To verify a signature $(r, s)$ of a message $m$ using the $\text{Public Key}$:
+
+1. Compute the modular inverse of $s$:
+$$
+w = s^{-1} \mod n
+$$
+2. Compute $u_1$:
+$$
+u_1 = w \cdot H(m) \mod n
+$$
+3. Compute $u_2$:
+$$
+u_2 = w \cdot r \mod n
+$$
+4. Compute the verification point $V$:
+$$
+V = u_1 \cdot G + u_2 \cdot \text{Public Key}
+$$
+5. With $V=(x_v,y_v)$, if $r = x_v \mod n$  (i.e. $V=R$) the signature is valid, meaning that the message $m$ was signed by the owner of the $\text{Private Key}$
+
+
+> The modular inverse of $s$ is the number $w$ such that $s \cdot w \equiv 1 \mod n$. \
+It is usually computed using the [extended Euclidean algorithm](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm).
+
+Proof of the verification:
+
+$$
+\begin{aligned}
+V &= u_1 \cdot G + u_2 \cdot \text{Public Key} \\
+&= w \cdot H(m) \cdot G + w \cdot r \cdot \text{Public Key} \\
+&= w \cdot (H(m) \cdot G + r \cdot \text{Public Key}) \\
+&= w \cdot (H(m) \cdot G + r \cdot \text{Private Key} \cdot G) \\
+&= w \cdot (H(m) + r \cdot \text{Private Key}) \cdot G \\
+&= s^{-1} \cdot (H(m) + r \cdot \text{Private Key}) \cdot G \\
+&= s^{-1} \cdot s \cdot \lambda \cdot G \\
+&= \lambda \cdot G \\
+&= R
+\end{aligned}
+$$
+
+## Annex: Calculating the Time Complexity of the Elliptic Curve Addition
 
 ```python
 import time
