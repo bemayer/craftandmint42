@@ -312,17 +312,17 @@ When you add any point on the elliptic curve to the point at infinity, you get t
 
 ### Discrete Logarithm Problem (DLP)
 
-#### Point multiplication by an integer
+#### Point multiplication by a scalar
 
 - Point multiplication is the operation of adding a point to itself a specified number of times.
 
-- For example, $P + P + \ldots + P = n P$, where $P$ is added $n$ times.
+- For example, $P + P + \ldots + P = \lambda P$, where $P$ is added $n$ times.
 
 - The addition is not efficient for large value of $n$. However, it can be made efficient using the double-and-add algorithm.
 
 #### Double-and-add algorithm
 
-1. Convert the integer $n$ to its binary representation.
+1. Convert the scalar $\lambda$ to its binary representation.
 
 2. Starting from the leftmost bit, double the result and add the point $P$ if the bit is 1.
 
@@ -341,14 +341,78 @@ Suppose we want to calculate $10P$. The binary representation of 10 is 0b1010. T
 
 The result is $10P$, as desired.
 
-This algorithm is efficient because it only requires $O(\log_2 n)$ point additions and doublings, making scalar multiplication computationally feasible even for large values of $n$.
+This algorithm is efficient because it only requires $O(\log_2 \lambda)$ point additions and doublings, making scalar multiplication computationally feasible even for large values of $\lambda$.
 
 #### Discrete logarithm problem
 
-> The essence of the discrete logarithm problem is that while it is straightforward to compute $Q$ given $n$ and $P$ through the expression $Q=nP$, reversing this process to determine the integer $n$ given $Q$ and $P$ is computationally very challenging. This asymmetry forms the foundation for the security underpinning elliptic curve cryptography.
+> The essence of the discrete logarithm problem is that while it is straightforward to compute $Q$ given $\lambda$ and $P$ through the expression $Q=\lambda P$, reversing this process to determine the scalar $\lambda$ given $Q$ and $P$ is computationally very challenging. This asymmetry forms the foundation for the security underpinning elliptic curve cryptography.
+
+To give an estimate the point addition whose code is given below took $57\mu s$ to execute on my computer. This means that it would take $57\mu s \times 2^{256} \approx 10^{70}$ years to compute the discrete logarithm problem for the secp256k1 curve, i.e. with a scalar of 256 bits.
+
+Using the Double-and-add method, we can compute $\lambda P$ in $O(\log_2 \lambda)$ point additions and doublings. It would take $57\mu s \times 256 \approx 15ms$ to compute.
 
 ### Digital signatures
 
 ### Public key cryptography
 
+## Annex: Calculating the time complexity of the elliptic curve addition
 
+```python
+import time
+
+def elliptic_curve_addition(P, Q, a, p):
+    """
+    Perform elliptic curve point addition P + Q over the curve defined by y^2 = x^3 + ax + b mod p.
+
+    Parameters:
+    - P, Q: Points on the elliptic curve in the form (x, y). Use (None, None) for the point at infinity O.
+    - a: The curve parameter in the equation y^2 = x^3 + ax + b.
+    - p: The prime number for the finite field GF(p).
+
+    Returns:
+    - The resulting point after addition in the form (x, y).
+    """
+    # Handle the point at infinity cases
+    if P == (None, None):
+        return Q
+    if Q == (None, None):
+        return P
+
+    x1, y1 = P
+    x2, y2 = Q
+
+    # Handle the case where points are additive inverses
+    if x1 == x2 and (y1 + y2) % p == 0:
+        return (None, None)
+
+    # Compute the slope
+    if P != Q:
+        lam = (y2 - y1) * pow(x2 - x1, -1, p)  # Use modular inverse
+    else:
+        lam = (3 * x1 ** 2 + a) * pow(2 * y1, -1, p)  # Use modular inverse
+
+    lam = lam % p  # Ensure slope is in the field
+
+    # Compute the resulting point
+    x3 = (lam ** 2 - x1 - x2) % p
+    y3 = (lam * (x1 - x3) - y1) % p
+
+    return (x3, y3)
+
+# Curve parameters for secp256k1
+a = 0
+p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F
+G = (0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798,
+     0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8)
+
+# Measure time
+start_time = time.perf_counter()
+
+# Perform elliptic curve addition
+R = elliptic_curve_addition(G, G, a, p)
+
+end_time = time.perf_counter()
+elapsed_time = end_time - start_time
+
+print(elapsed_time)
+```
