@@ -407,7 +407,7 @@ According to the standards defining the *secp256k1* curve ([Standards for Effici
 
 > The elliptic curve domain parameters over $\mathbb{F}_p$ associated with a Koblitz curve secp256k1 are specified by the sextuple T = (p, a, b, G, n, h)
 
-The six parameters are now have been defined, as a reminder:
+The six parameters have been defined, as a reminder:
 - $p$ is the prime number defining the finite field $\mathbb{F}_p$.
 
 $$
