@@ -192,7 +192,7 @@ This is referred to as the **Weierstrass equation**.
 When elliptic curves are used in cryptography they are often defined over finite fields, which are set of numbers with a finite count. There are two types of finite fields: prime fields ($\mathbb{F}_p$) and binary fields ($\mathbb{F}_{2^m}$). The field used in Ethereum is a prime field.
 
 
-### Elliptic Curve over a Finite Prime Field $\mathbb{F}_p$
+### Elliptic Curve over a Finite Prime Field ($\mathbb{F}_p$)
 
 In a prime field $\mathbb{F}_p$, where $p$ is a prime number, the elements are integers in the range $\{0, 1, \ldots, p-1\}$.
 
@@ -381,7 +381,7 @@ The order of $G$, symbolized as $n$, is pivotal since it shapes the cyclic subgr
 For the *secp256k1* curve, the base point $G$ is defined as:
 
 $$
-G = (55066263022277343669578718895168534326250603453777594175500187360389116729240,\\\
+G = (55066263022277343669578718895168534326250603453777594175500187360389116729240,\\
 32670510020758816978083085130507043184471273380659243275938904335757337482424)
 $$
 
@@ -394,10 +394,10 @@ $$
 Another value given for *secp256k1* curve is its cofactor $h$, which is defined as:
 
 $$
-h = \frac{{\text{order } E(\mathbb{F}_p)}}{n}
+h = \frac{\#E(\mathbb{F}_p)}{n}
 $$
 
-where $\text{order }E(\mathbb{F}_p)$ is the number of points on the curve over the field $\mathbb{F}_p$.
+where $\#E(\mathbb{F}_p)$ is the number of points on the curve over the field $\mathbb{F}_p$.
 
 For *secp256k1*, $h = 1$, meaning that the number of points on the curve is equal to the order of the base point.
 
@@ -577,7 +577,7 @@ def elliptic_curve_addition(P, Q, a, p):
 a = 0
 p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F
 G = (0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798,
-0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8)
+     0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8)
 
 # Measure time
 start_time = time.perf_counter()
