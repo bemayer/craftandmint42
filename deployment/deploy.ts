@@ -6,7 +6,7 @@ async function main() {
   await craftAndMint42.waitForDeployment();
 
   console.log(
-    `CraftAndMint42 deployed to ${craftAndMint42.target}`
+    `CraftAndMint42 deployed to ${JSON.stringify(craftAndMint42.target)}`
   );
 }
 

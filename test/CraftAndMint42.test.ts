@@ -1,11 +1,9 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
-import { CraftAndMint42 } from '../typechain-types';
-
 
 const IPFS_HASH = "hash";
-const TOKEN_FIRST_URI = "https://gateway.ipfs.io/ipfs/" + IPFS_HASH;
+const TOKEN_FIRST_URI = `https://gateway.ipfs.io/ipfs/${IPFS_HASH}`;
 const TOKEN_FIRST_TITLE = "First Token";
 
 async function deploy() {
@@ -54,8 +52,8 @@ describe("Minting", () => {
 
     describe("Transferring", () => {
       it("Should not allow non-owner to transfer the token", async () => {
-        expect(
-          await craftAndMint42.connect(account2).transfer(account1.address, 0)
+        await expect(
+          craftAndMint42.connect(account2).transfer(account1.address, 0)
         ).to.be.revertedWith("Not token owner");
       });
 

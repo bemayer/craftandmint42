@@ -11,7 +11,7 @@
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
-    "lint": "npx solhint contracts/*.sol && npx eslint .",
+    "lint": "npx solhint contracts/*.sol && npx eslint ./hardhat.config.ts ./test/CraftAndMint42.test.ts ./frontend/app.js ./deployment/deploy.ts",
     "createLocalNode": "./node_modules/.bin/hardhat node"
   },
   "repository": "github:bemayer/craftandmint42",
@@ -53,6 +53,7 @@
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "@openzeppelin/contracts": "^5.0.0",
+    "chai": "^4.3.10",
     "hardhat": "^2.19.0",
     "solc": "^0.8.22"
   }

@@ -7,19 +7,21 @@
   "parserOptions": {
     "project": "./tsconfig.json",
     "sourceType": "module",
-    "ecmaVersion": 2020
+    "ecmaVersion": 2022
   },
   "extends": [
     "airbnb/base",
     "airbnb-typescript/base",
     "prettier",
-    "plugin:node/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-type-checked"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
     "no-undef": "off",
     "no-console": "off",
-    "no-use-before": "off"
+    "no-use-before": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/ban-ts-comment": "off"
   }
 }

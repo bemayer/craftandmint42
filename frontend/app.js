@@ -16,7 +16,7 @@ document.getElementById("api-form")?.addEventListener("submit", (e) => {
 
 document
   .getElementById("image-generator-form")
-  ?.addEventListener("submit", async (e) => {
+  ?.addEventListener("submit", (e) => {
     e.preventDefault();
     generateImage();
   });
@@ -51,6 +51,7 @@ function displayContent(contentID) {
 
   const allContent = document.querySelectorAll(".content");
   allContent.forEach((content) => {
+    // eslint-disable-next-line no-param-reassign
     if (content instanceof HTMLElement) content.style.display = "none";
   });
 
@@ -219,7 +220,7 @@ async function uploadImageToIPFS(imageFile) {
   try {
     const response = await fetch(url, {
       method: "POST",
-      headers: headers,
+      headers,
       body: formData,
     });
 
@@ -232,6 +233,7 @@ async function uploadImageToIPFS(imageFile) {
   } catch (error) {
     console.error(`Failed to upload image: ${error}`);
   }
+  return {};
 }
 
 /**
@@ -259,6 +261,7 @@ function updateDisplay(elementId, displayValue) {
 function updateProperty(elementId, property, value) {
   const element = document.getElementById(elementId);
   if (element) {
+    // @ts-ignore
     element[property] = value;
   }
 }
