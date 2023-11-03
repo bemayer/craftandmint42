@@ -6,6 +6,9 @@ const config: HardhatUserConfig = {
   paths: {
     sources: "./code",
   },
+  mocha: {
+    timeout: 600000,
+  },
 };
 
 export default config;

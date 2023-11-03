@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2022",
+    "target": "es2020",
     "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -8,5 +8,10 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "exclude": ["node_modules"]
+  "files": [
+    "./hardhat.config.ts",
+    "./test/CraftAndMint42.test.ts",
+    "./frontend/app.js",
+    "./deployment/deploy.ts"
+  ]
 }
