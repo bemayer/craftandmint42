@@ -7,67 +7,17 @@ on:
     branches: [ "master" ]
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up matrix for Node.js versions
-      id: set-matrix
-      run: echo "::set-output name=matrix::{\"include\":[{\"node-version\":\"16.x\"},{\"node-version\":\"14.x\"}]}"
-
-    - name: Cache node modules
-      uses: actions/cache@v3
-      id: node-cache
-      with:
-        path: node_modules
-        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-
-    - name: Install Dependencies
-      if: steps.node-cache.outputs.cache-hit != 'true'
-      run: npm ci
-
-  lint:
-    needs: setup
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.setup.outputs.matrix)}}
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm run lint
-
   build:
-    needs: setup
     runs-on: ubuntu-latest
-    outputs:
-          matrix: ${{fromJson(needs.setup.outputs.matrix)}}
-    strategy:
-      matrix: ${{fromJson(needs.setup.outputs.matrix)}}
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm run build
 
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.build.outputs.matrix)}}
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 20.x
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 20.x
         cache: 'npm'
-    - run: npm run test
+    - run: npm ci
+    - run: npm run lint
+    - run: npm run build
+    - run: npm test
