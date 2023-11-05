@@ -71,3 +71,24 @@ describe("Minting", () => {
     });
   });
 });
+
+
+describe("Query Functions", () => {
+  it("Should return the correct total number of NFTs", async () => {
+    const { craftAndMint42, admin, account1 } = await loadFixture(deploy);
+
+    expect(await craftAndMint42.getTotalNFTs()).to.equal(0);
+
+    await craftAndMint42.connect(admin).mint(account1.address, TOKEN_FIRST_TITLE, IPFS_HASH);
+
+    expect(await craftAndMint42.getTotalNFTs()).to.equal(1);
+    expect((await craftAndMint42.getNFTInfo(0)).title).to.equal(TOKEN_FIRST_TITLE);
+  });
+
+  it("Should revert when getting info for non-existent token ID", async () => {
+    const { craftAndMint42 } = await loadFixture(deploy);
+
+    await expect(craftAndMint42.getNFTInfo(999)).to.be.revertedWith("Token ID does not exist");
+  });
+});
+

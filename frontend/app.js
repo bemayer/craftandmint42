@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-check
 
 /**
@@ -5,45 +6,8 @@
  */
 
 /**
- * Add listeners to DOM elements.
- */
-window.addEventListener("DOMContentLoaded", initializeMenu);
-
-document.getElementById("api-form")?.addEventListener("submit", (e) => {
-  e.preventDefault();
-  checkKeys();
-});
-
-document
-  .getElementById("image-generator-form")
-  ?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    generateImage();
-  });
-
-document
-  .getElementById("close-error-api-key")
-  ?.addEventListener("click", () => {
-    updateDisplay("error-api-key", "none");
-  });
-
-/**
- * Initialize the menu.
- */
-function initializeMenu() {
-  const menuItems = document.querySelectorAll(".menu-item");
-  menuItems.forEach((item, idx) => {
-    if (idx === 0) displayContent(item.getAttribute("data-target"));
-    item.addEventListener("click", (event) => {
-      const targetContent = event.target;
-      if (targetContent instanceof HTMLElement)
-        displayContent(targetContent.getAttribute("data-target"));
-    });
-  });
-}
-
-/**
  * Display content based on the menu item clicked.
+ *
  * @param {string | null} contentID - The ID of the content to display.
  */
 function displayContent(contentID) {
@@ -66,37 +30,33 @@ function displayContent(contentID) {
 /**
  * Check the validity of provided API keys and update UI elements accordingly.
  */
-async function checkKeys() {
-  const apiKeyInput = document.getElementById("api-key");
-  if (!(apiKeyInput instanceof HTMLInputElement)) return;
-
-  const credits = await checkDreamStudioBalance(apiKeyInput.value);
-  if (!credits) {
-    updateDisplay("error-api-key", "block");
-    return;
-  }
-
-  apiKeyInput.style.display = "none";
-  updateDisplay("api-key-submit", "none");
-  updateCreditsDisplay(credits);
-}
-
-/**
- * Update and display DreamStudio credits.
- * @param {number} credits - The number of available credits.
- */
-function updateCreditsDisplay(credits) {
-  const creditsDisplay = document.getElementById("display-credits");
-  if (creditsDisplay) {
-    creditsDisplay.innerHTML = `Available DreamStudio credits: <strong>${credits.toFixed(
-      2
-    )}</strong>`;
-    creditsDisplay.style.display = "block";
+async function checkDreamstudioAPIKey() {
+  try {
+    const apiKeyButton = document.getElementById("dreamstudio-api-key-submit");
+    apiKeyButton.disabled = true;
+    const apiKeyInput = document.getElementById("dreamstudio-api-key");
+    const credits = await checkDreamStudioBalance(apiKeyInput.value);
+    if (!credits) throw new Error("Invalid API key");
+    apiKeyInput.style.display = "none";
+    updateDisplay("dreamstudio-api-key-submit", "none");
+    updateDisplay("menu-item-set-up", "block");
+    updateDisplay("menu-item-generate-image", "block");
+    apiKeyInput.disabled = true;
+    updateMessage(
+      "display-credits",
+      `Available DreamStudio credits: <strong>${credits.toFixed(2)}</strong>`
+    );
+  } catch (error) {
+    console.error(error);
+    updateDisplay("error-dreamstudio-api-key", "block");
+    const apiKeyButton = document.getElementById("dreamstudio-api-key-submit");
+    apiKeyButton.disabled = false;
   }
 }
 
 /**
  * Check the balance of DreamStudio credits for a given API key.
+ *
  * @param {string} apiKey - The API key for DreamStudio.
  * @returns {Promise<number>} - Returns the number of credits available, or 0 if the request fails.
  */
@@ -125,6 +85,7 @@ async function checkDreamStudioBalance(apiKey) {
 
 /**
  * Fetch image from DreamStudio using the provided URL, API key, and text description.
+ *
  * @param {string} url - The API URL.
  * @param {string} apiKey - The API key for authentication.
  * @param {string} text - The text description for generating the image.
@@ -169,71 +130,348 @@ async function fetchImageFromDreamStudio(url, apiKey, text) {
  * Make a request to DreamStudio API to generate an image based on the provided description.
  */
 async function generateImage() {
-  const url =
-    "https://api.stability.ai/v1/generation/stable-diffusion-512-v2-1/text-to-image";
-  const apiKeyInput = document.getElementById("api-key");
-  if (!(apiKeyInput instanceof HTMLInputElement)) return;
-
-  const promptInput = document.getElementById("image-description");
-  if (!(promptInput instanceof HTMLInputElement) || !promptInput.value) return;
-
-  const apiKey = apiKeyInput.value;
-  const prompt = promptInput.value;
-
   try {
+    const url =
+      "https://api.stability.ai/v1/generation/stable-diffusion-512-v2-1/text-to-image";
+    const apiKeyInput = document.getElementById("dreamstudio-api-key");
+    const promptInput = document.getElementById("image-description");
+    const apiKey = apiKeyInput.value;
+    const prompt = promptInput.value;
+    const generateImageButton = document.getElementById(
+      "generate-image-button"
+    );
+    generateImageButton.disabled = true;
     const blob = await fetchImageFromDreamStudio(url, apiKey, prompt);
     const generatedImageURL = URL.createObjectURL(blob);
     localStorage.setItem("generatedImage", generatedImageURL);
   } catch (error) {
     console.error(error);
+    const generateImageButton = document.getElementById(
+      "generate-image-button"
+    );
+    generateImageButton.disabled = false;
     return;
   }
 
-  const fromLocalStorage = localStorage.getItem("generatedImage");
+  const image = localStorage.getItem("generatedImage");
 
-  updateProperty("generated-image", "src", fromLocalStorage);
+  updateProperty("generated-image", "src", image);
   updateProperty("generated-image-title", "textContent", prompt);
   updateDisplay("generated-image", "block");
+  updateDisplay("store-image-form", "block");
 }
 
-// UNTESTED CODE BELOW FOR LOADING TO IPFS VIA PINATA
+/**
+ * LOAD IMAGE TO IPFS VIA PINATA
+ */
 
 /**
- * Uploads an image to IPFS via the Pinata service.
- * @param {File} imageFile - The image file to upload.
- * @return {Promise<Object>} - The Pinata response with the IPFS hash.
+ * Checks the credentials for Pinata API.
  */
-async function uploadImageToIPFS(imageFile) {
-  const pinataApiKey = "YourPinataAPIKeyHere";
-  const pinataApiSecret = "YourPinataAPISecretHere";
-
-  const url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
-
-  const formData = new FormData();
-  formData.append("file", imageFile);
-
-  const headers = {
-    pinata_api_key: pinataApiKey,
-    pinata_secret_api_key: pinataApiSecret,
-  };
-
+async function checkPinataCredentials() {
   try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers,
-      body: formData,
-    });
+    const apiKeyInput = document.getElementById("pinata-api-key");
+
+    const options = {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        authorization: `Bearer ${apiKeyInput.value}`,
+      },
+    };
+
+    const response = await fetch(
+      "https://api.pinata.cloud/data/testAuthentication",
+      options
+    );
 
     if (!response.ok) {
-      throw new Error("Failed to upload image to IPFS via Pinata");
+      const errorData = await response.json();
+      throw new Error(`Error: ${errorData.error}`);
     }
 
-    const result = await response.json();
-    return result;
+    const data = await response.json();
+    console.log("Pinata authentication successful:", data);
+    updateDisplay("pinata-credentials-submit", "none");
+    apiKeyInput.disabled = true;
+    updateMessage(
+      "display-pinata-credentials",
+      "Pinata authentication successful !"
+    );
+    const storeImageButton = document.getElementById("store-image-button");
+    storeImageButton.disabled = false;
   } catch (error) {
-    console.error(`Failed to upload image: ${error}`);
+    console.error("Pinata authentication failed:", error.message);
+    updateDisplay("error-pinata-credentials", "block");
   }
-  return {};
+}
+
+/**
+ * Stores an image on IPFS using the Pinata API.
+ */
+async function storeImageOnIPFS() {
+  try {
+    const storeImageButton = document.getElementById("store-image-button");
+    storeImageButton.disabled = true;
+    const file = await getFile();
+    const body = createFormData(file);
+    const apiKey = document.getElementById("pinata-api-key").value;
+
+    const options = {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        authorization: `Bearer ${apiKey}`,
+      },
+      body,
+    };
+
+    console.log(options);
+
+    const response = await fetch(
+      "https://api.pinata.cloud/pinning/pinFileToIPFS",
+      options
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Error: ${errorData.error}`);
+    }
+
+    const data = await response.json();
+    const ipfsHash = data.IpfsHash;
+    console.log("IPFS Hash:", ipfsHash);
+    updateDisplay("store-image-button", "none");
+    updateDisplay("mint-form", "block");
+    const ipfsHashDisplay = document.getElementById("ipfs-hash");
+    ipfsHashDisplay.setAttribute("ipfs-hash", ipfsHash);
+    updateMessage(
+      "ipfs-hash",
+      `Image stored on IPFS with hash: <strong>${ipfsHash}</strong>`
+    );
+  } catch (error) {
+    const storeImageButton = document.getElementById("store-image-button");
+    storeImageButton.disabled = false;
+    console.error(`Failed to store image on IPFS: ${error.message}`);
+  }
+}
+
+/**
+ * Generates file object for the image.
+ *
+ * @returns {File} An object containing the file.
+ */
+async function getFile() {
+  const filename = document
+    .getElementById("generated-image-title")
+    .textContent.replace(/\s+/g, "")
+    .toLowerCase();
+  const blobUrl = localStorage.getItem("generatedImage");
+  const blobResponse = await fetch(blobUrl);
+  const blob = await blobResponse.blob();
+  const file = new File([blob], `${filename}.jpg`, { type: blob.type });
+  return file;
+}
+
+/**
+ * Creates a FormData object with the file.
+ *
+ * @param {File} file - The file to append to FormData.
+ * @returns {FormData} The FormData object.
+ */
+function createFormData(file) {
+  const body = new FormData();
+  body.append("file", file);
+  return body;
+}
+
+/**
+ * INTERACT WITH SMART CONTRACT
+ */
+
+/**
+ * Interacts with the smart contract to verify the private key.
+ */
+async function checkPrivateKey() {
+  try {
+    const privateKeyButton = document.getElementById("private-key-submit");
+    privateKeyButton.disabled = true;
+    const privateKeyInput = document.getElementById("private-key");
+    const privateKey = privateKeyInput.value;
+    const provider = new ethers.providers.JsonRpcProvider();
+    const wallet = new ethers.Wallet(privateKey, provider);
+    const address = await wallet.getAddress();
+    const balanceWei = await wallet.getBalance();
+    const balanceEther = ethers.utils.formatEther(balanceWei);
+    console.log(`address: ${address}`);
+    console.log(`balance: ${balanceEther.toString()}`);
+    privateKeyInput.disabled = true;
+    updateDisplay("private-key-submit", "none");
+    updateDisplay("contract-abi-file", "block");
+    updateMessage(
+      "display-balance",
+      `Wallet balance: <strong>${balanceEther} ETH</strong>`
+    );
+  } catch (error) {
+    updateDisplay("error-dreamstudio-api-key", "block");
+    const privateKeyButton = document.getElementById("private-key-submit");
+    privateKeyButton.disabled = false;
+  }
+}
+
+/**
+ * Reads the ABI file and stores its content in local storage.
+ */
+async function readABIFile() {
+  const abiInput = document.getElementById("abi-file");
+  const abi = await abiInput.files[0].text();
+  localStorage.setItem("abi", abi);
+  updateDisplay("abi-file", "none");
+  updateDisplay("abi-file-submit", "none");
+  updateMessage("display-abi-file", "ABI file uploaded");
+  updateDisplay("contract-address-form", "block");
+}
+
+/**
+ * Checks the contract address and updates the UI accordingly.
+ */
+async function checkContractAddress() {
+  try {
+    const contractAddressButton = document.getElementById(
+      "contract-address-submit"
+    );
+    contractAddressButton.disabled = true;
+    const contractAddressInput = document.getElementById("contract-address");
+    const abi = localStorage.getItem("abi");
+    console.log(`abi: ${abi}`);
+
+    const contractAddress = contractAddressInput.value;
+    const provider = new ethers.providers.JsonRpcProvider();
+    const contract = new ethers.Contract(contractAddress, abi, provider);
+    const contractName = await contract.name();
+    console.log(`name: ${contractName}`);
+    contractAddressInput.disabled = true;
+    updateDisplay("contract-address-submit", "none");
+    updateDisplay("menu-item-show-nfts", "block");
+    updateDisplay("generate-wallet-form", "block");
+    updateMessage(
+      "display-contract-name",
+      `Contract name: <strong>${contractName}</strong>`
+    );
+  } catch (error) {
+    console.error(`Error checking contract address: ${error.message}`);
+    updateDisplay("error-contract-address", "block");
+    const contractAddressButton = document.getElementById(
+      "contract-address-submit"
+    );
+    contractAddressButton.disabled = false;
+  }
+}
+
+/**
+ * Generates a new wallet and updates the UI.
+ */
+function generateWallet() {
+  const wallet = ethers.Wallet.createRandom();
+  console.log(`address: ${wallet.address}`);
+  console.log(`private key: ${wallet.privateKey}`);
+  const generatedWallet = document.getElementById("generated-wallet");
+  generatedWallet.setAttribute("wallet-address", wallet.address);
+  updateMessage(
+    "generated-wallet",
+    `Address: <strong>${wallet.address}</strong><br>Private Key: <strong>${wallet.privateKey}</strong>`
+  );
+  updateDisplay("generate-wallet-button", "none");
+  const mintButton = document.getElementById("mint-button");
+  mintButton.disabled = false;
+}
+
+/**
+ * Initiates the minting process for a new NFT.
+ */
+async function mintNFT() {
+  try {
+    const mintButton = document.getElementById("mint-button");
+    mintButton.disabled = true;
+    const details = getContractDetails();
+
+    const tx = await details.contract.mint(
+      details.toAddress,
+      details.title,
+      details.ipfsHash
+    );
+    console.log("Mining... please wait.");
+    await tx.wait();
+    console.log("Mint successful!");
+    updateMessage("display-mint", "Mint successful!");
+    updateDisplay("mint-button", "none");
+  } catch (error) {
+    console.error(`Error minting NFT: ${error.message}`);
+    const mintButton = document.getElementById("mint-button");
+    mintButton.disabled = false;
+  }
+}
+
+/**
+ * Fetches all NFTs from the smart contract.
+ */
+async function loadNFTs() {
+  try {
+    const { contract } = getContractDetails();
+    const totalNFTs = await contract.getTotalNFTs();
+    const galleryElement = document.getElementById("nft-gallery");
+    galleryElement.innerHTML = "";
+    const loadAndAppendNFT = async (tokenId) => {
+      const nftInfo = await contract.getNFTInfo(tokenId);
+      const nftCard = document.createElement("div");
+      nftCard.className = "nft-card";
+      nftCard.innerHTML = `
+          <article>
+          <h2>${nftInfo.title}</h2>
+          <figure>
+          <img src="${nftInfo.uri}" alt="${nftInfo.title}">
+          <figcaption><i>Token Id: ${tokenId} - Owner: ${nftInfo.owner}</i></figcaption>
+          </figure>
+          </article>
+          <hr>
+      `;
+      galleryElement.appendChild(nftCard);
+    };
+
+    const tokenIds = Array.from({ length: totalNFTs }, (_, index) => index);
+    await Promise.all(tokenIds.map(loadAndAppendNFT));
+  } catch (error) {
+    console.error(`Error loading NFTs: ${error.message}`);
+  }
+}
+
+/**
+ * Gathers the necessary details for interacting with the smart contract
+ *
+ * @typedef {object} ContractDetails
+ * @property {object} contract - The smart contract instance.
+ * @property {string} toAddress - The Ethereum address to which the NFT will be minted.
+ * @property {string} title - The title of the NFT, extracted from a DOM element.
+ * @property {string} ipfsHash - The IPFS hash of the NFT's metadata, extracted from a DOM element.
+ *
+ * @returns {ContractDetails} mintingDetails An object containing the necessary details for minting.
+ */
+function getContractDetails() {
+  const provider = new ethers.providers.JsonRpcProvider();
+  const privateKey = document.getElementById("private-key").value;
+  const wallet = new ethers.Wallet(privateKey, provider);
+  const contractAddress = document.getElementById("contract-address").value;
+  const abi = localStorage.getItem("abi");
+  const toAddress = document
+    .getElementById("generated-wallet")
+    .getAttribute("wallet-address");
+  const title = document.getElementById("generated-image-title").textContent;
+  const ipfsHash = document
+    .getElementById("ipfs-hash")
+    .getAttribute("ipfs-hash");
+  const contract = new ethers.Contract(contractAddress, abi, wallet);
+
+  return { contract, toAddress, title, ipfsHash };
 }
 
 /**
@@ -242,6 +480,7 @@ async function uploadImageToIPFS(imageFile) {
 
 /**
  * Update display value for an HTML element identified by an ID.
+ *
  * @param {string} elementId - The ID of the HTML element.
  * @param {string} displayValue - The display value to set.
  */
@@ -254,6 +493,7 @@ function updateDisplay(elementId, displayValue) {
 
 /**
  * Update property for an HTML element identified by an ID.
+ *
  * @param {string} elementId - The ID of the HTML element.
  * @param {string} property - The property to update.
  * @param {any} value - The display value to set.
@@ -264,4 +504,15 @@ function updateProperty(elementId, property, value) {
     // @ts-ignore
     element[property] = value;
   }
+}
+
+/**
+ * Update the inner HTML and display property for an HTML element identified by an ID.
+ *
+ * @param {string} elementId - The ID of the HTML element.
+ * @param {string} message - The message to display inside the HTML element.
+ */
+function updateMessage(elementId, message) {
+  updateProperty(elementId, "innerHTML", message);
+  updateDisplay(elementId, "block");
 }

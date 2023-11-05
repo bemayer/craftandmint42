@@ -19,7 +19,6 @@ contract CraftAndMint42 is ERC721URIStorage {
     /// @dev Mapping from token ID to NftInfos.
     mapping(uint => NftInfo) public nftInfos;
 
-
     /// @dev Contract constructor initializes the contract with a name and symbol for the NFT.
     constructor() ERC721("CraftAndMint42", "CM42") {
         admin = msg.sender;
@@ -41,29 +40,19 @@ contract CraftAndMint42 is ERC721URIStorage {
     /// @param to The address to mint the new token to.
     /// @param title The title of the artwork.
     /// @param ipfsHash The IPFS hash of the artwork.
-    function mint(address to, string memory title, string memory ipfsHash) external onlyAdmin {
+    function mint(
+        address to,
+        string memory title,
+        string memory ipfsHash
+    ) external onlyAdmin {
         uint tokenId = nextTokenId;
         nextTokenId++;
         _mint(to, tokenId);
-        string memory uri = string(abi.encodePacked("https://gateway.ipfs.io/ipfs/", ipfsHash));
+        string memory uri = string(
+            abi.encodePacked("https://gateway.ipfs.io/ipfs/", ipfsHash)
+        );
         _setTokenURI(tokenId, uri);
-        nftInfos[tokenId] = NftInfo({
-            owner: to,
-            title: title,
-            uri: uri
-        });
-    }
-
-    /// @notice Retrieves info of all tokens.
-    /// @dev This function could be very gas expensive and exceed block gas limits as the number of tokens increases.
-    /// @return An array of NftInfo structs containing info about each token.
-    function getAllOwnersInfo() external onlyAdmin view returns (NftInfo[] memory) {
-        uint totalTokens = nextTokenId;
-        NftInfo[] memory infos = new NftInfo[](totalTokens);
-        for (uint i = 0; i < totalTokens; i++) {
-            infos[i] = nftInfos[i];
-        }
-        return infos;
+        nftInfos[tokenId] = NftInfo({owner: to, title: title, uri: uri});
     }
 
     /// @notice Allows a token owner or an approved address to transfer the token.
@@ -72,5 +61,19 @@ contract CraftAndMint42 is ERC721URIStorage {
     function transfer(address to, uint tokenId) external onlyOwner(tokenId) {
         _transfer(msg.sender, to, tokenId);
         nftInfos[tokenId].owner = to;
+    }
+
+    /// @notice Returns the total number of NFTs minted.
+    /// @return The total number of NFTs minted.
+    function getTotalNFTs() external view returns (uint) {
+        return nextTokenId;
+    }
+
+    /// @notice Retrieves the info of a specific NFT.
+    /// @param tokenId The ID of the NFT.
+    /// @return A struct containing the info of the specified NFT.
+    function getNFTInfo(uint tokenId) external view returns (NftInfo memory) {
+        require(tokenId < nextTokenId, "Token ID does not exist");
+        return nftInfos[tokenId];
     }
 }
