@@ -7,17 +7,79 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  cache-dependencies:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x, 20.x]
+    outputs:
+      cache-key: ${{ steps.cache-dependencies.outputs.cache-key }}
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js 20.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20.x
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run lint
-    - run: npm run build
-    - run: npm test
+      - uses: actions/checkout@v3
+      - name: Cache node modules
+        id: cache-dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: npm ci
+
+  lint:
+    needs: cache-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: 'npm'
+      - name: Use cached node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ needs.cache-dependencies.outputs.cache-key }}
+      - run: npm run lint
+
+  build:
+    needs: cache-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: 'npm'
+      - name: Use cached node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ needs.cache-dependencies.outputs.cache-key }}
+      - run: npm run build
+
+  test:
+    needs: cache-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: 'npm'
+      - name: Use cached node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ needs.cache-dependencies.outputs.cache-key }}
+      - run: npm test

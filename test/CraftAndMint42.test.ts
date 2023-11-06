@@ -45,10 +45,10 @@ describe("Minting", () => {
 
     await craftAndMint42.connect(admin).mint(account1.address, TOKEN_FIRST_TITLE, IPFS_HASH);
 
-    expect(await craftAndMint42.nextTokenId()).to.equal(1);
+    expect(await craftAndMint42.getTotalNFTs()).to.equal(1);
     expect(await craftAndMint42.ownerOf(0)).to.equal(account1.address);
     expect(await craftAndMint42.tokenURI(0)).to.equal(TOKEN_FIRST_URI);
-    expect((await craftAndMint42.nftInfos(0)).title).to.equal(TOKEN_FIRST_TITLE);
+    expect((await craftAndMint42.getNFTInfo(0)).title).to.equal(TOKEN_FIRST_TITLE);
   });
 });
 
