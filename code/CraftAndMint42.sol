@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 /// @title CraftAndMint42
 /// @dev This contract allows for the minting, and ownership management of unique digital assets represented as non-fungible tokens (NFTs).
 contract CraftAndMint42 is ERC721URIStorage {
-    uint public nextTokenId;
+    uint _nextTokenId;
     address public admin;
 
     /// @dev Struct to store metadata of each NFT.
@@ -17,7 +17,7 @@ contract CraftAndMint42 is ERC721URIStorage {
     }
 
     /// @dev Mapping from token ID to NftInfos.
-    mapping(uint => NftInfo) public nftInfos;
+    mapping(uint => NftInfo) _nftInfos;
 
     /// @dev Contract constructor initializes the contract with a name and symbol for the NFT.
     constructor() ERC721("CraftAndMint42", "CM42") {
@@ -32,7 +32,7 @@ contract CraftAndMint42 is ERC721URIStorage {
 
     /// @dev Modifier to check if the function caller is the owner of the token.
     modifier onlyOwner(uint tokenId) {
-        require(nftInfos[tokenId].owner == msg.sender, "Not token owner");
+        require(_nftInfos[tokenId].owner == msg.sender, "Not token owner");
         _;
     }
 
@@ -45,14 +45,14 @@ contract CraftAndMint42 is ERC721URIStorage {
         string memory title,
         string memory ipfsHash
     ) external onlyAdmin {
-        uint tokenId = nextTokenId;
-        nextTokenId++;
+        uint tokenId = _nextTokenId;
+        _nextTokenId++;
         _mint(to, tokenId);
         string memory uri = string(
             abi.encodePacked("https://gateway.ipfs.io/ipfs/", ipfsHash)
         );
         _setTokenURI(tokenId, uri);
-        nftInfos[tokenId] = NftInfo({owner: to, title: title, uri: uri});
+        _nftInfos[tokenId] = NftInfo({owner: to, title: title, uri: uri});
     }
 
     /// @notice Allows a token owner or an approved address to transfer the token.
@@ -60,20 +60,20 @@ contract CraftAndMint42 is ERC721URIStorage {
     /// @param tokenId The ID of the token to transfer.
     function transfer(address to, uint tokenId) external onlyOwner(tokenId) {
         _transfer(msg.sender, to, tokenId);
-        nftInfos[tokenId].owner = to;
+        _nftInfos[tokenId].owner = to;
     }
 
     /// @notice Returns the total number of NFTs minted.
     /// @return The total number of NFTs minted.
     function getTotalNFTs() external view returns (uint) {
-        return nextTokenId;
+        return _nextTokenId;
     }
 
     /// @notice Retrieves the info of a specific NFT.
     /// @param tokenId The ID of the NFT.
     /// @return A struct containing the info of the specified NFT.
     function getNFTInfo(uint tokenId) external view returns (NftInfo memory) {
-        require(tokenId < nextTokenId, "Token ID does not exist");
-        return nftInfos[tokenId];
+        require(tokenId < _nextTokenId, "Token ID does not exist");
+        return _nftInfos[tokenId];
     }
 }
