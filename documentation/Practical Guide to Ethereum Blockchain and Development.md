@@ -1,82 +1,76 @@
-1. Introduction
-1.1. Background of Ethereum Blockchain
-1.2. Importance of Ethereum in NFT Deployment
-1.3. Overview of the Document
+# Understanding Blockchain and Ethereum
 
-2. Getting Started
-2.1. Setting Up Development Environment
-- Visual Studio Code
-- Hardhat
-2.2. Basics of Solidity Language
-- Syntax
-- Data Types
-- Functions and Control Structures
+## The Genesis of Blockchain: Bitcoin
 
-3. Ethereum Blockchain Basics
-3.1. How Ethereum Blockchain Works
-3.2. Transactions and Blocks
-3.3. Ethereum Virtual Machine (EVM)
-3.4. Gas and Fees
+**Bitcoin's Innovation**: Bitcoin introduced the first practical implementation of blockchain technology. It organizes transactions into blocks, which are interconnected in a chronological chain. The security of this chain is ensured by cryptographic hashes—a unique digital fingerprint—of the previous block. Altering a single block would require recalculating the hashes of all subsequent blocks, making fraud extremely difficult.
 
-4. Smart Contracts
-4.1. What Are Smart Contracts?
-4.2. Creating a Smart Contract
-4.3. Deploying and Interacting with Smart Contracts
+## Blockchain Data Structure Explained
 
-5. NFT Deployment
-5.1. What are NFTs?
-5.2. Creating an NFT
-5.3. Deploying an NFT on Ethereum
+**Transactions as State Transitions:** Each transaction on the blockchain represents a change in state, transitioning from one balance to another. By processing these transitions, the current value of each account can be determined.
 
-6. Testing and Debugging
-6.1. Testing Smart Contracts
-6.2. Debugging Techniques
+**Bitcoin Script:** Bitcoin transactions include a scripting language which is executed during the transaction. This language, known as Bitcoin Script, is not Turing complete, meaning it can't solve all computational problems, but it's sufficient for creating conditional transactions. (Source : [Bitcoin Wiki](https://en.bitcoin.it/wiki/Script))
 
-7. Security Best Practices
-7.1. Common Vulnerabilities
-7.2. Security Audits
+## Ethereum and Its Innovations
 
-Conclusion
+**Expanding the Blockchain Concept:** Ethereum's whitepaper conceptualized the blockchain as a more flexible state transition system. Unlike Bitcoin, which primarily tracks currency movement, Ethereum's state encompasses a wider range of information, including the code of smart contracts and their internal states.
 
-References and Further Reading
+**Solidity and Turing Completeness:** Solidity is Ethereum's native programming language, designed for creating smart contracts. It's Turing complete, which allows it to execute any computable function, paving the way for more complex applications like dApps.
 
+## The Mechanics of Ethereum
 
-- First blockchain: bitcoin
+**Smart Contracts and dApps:** Ethereum smart contracts are akin to class instances in object-oriented programming, with functions and attributes stored on the blockchain. Interactions with these contracts occur through transactions that contain messages or function calls.
 
-- Store transactions in blocks
+**Gas and Resource Management:** Every operation in Ethereum, from simple transfers to complex contract interactions, requires "gas" as a fee. This fee system prevents spam and allocates resources on the network efficiently. Developers must consider gas usage, as the Solidity compiler provides estimates for the cost of running their code.
 
-- Block are "chained" together: they store the hash of the previous block so it is not possible to modify a block without modifying all the blocks that come after it
+**Ethereum Virtual Machine (EVM):** Ethereum operates as a distributed virtual machine. Each node on the network executes the same code, ensuring consensus on the state of the blockchain. This distributed nature allows for a wide array of possible applications.
 
--> Give more explanation of a blockchain data structure
+**Standards and Interoperability:** To facilitate interaction and ensure interoperability, standards were created such as ERC-20 for fungible tokens and ERC-721 for non-fungible tokens (NFTs). These standards define essential functions and properties to be implemented by the smart contracts to enable seamless exchange and interaction within the Ethereum ecosystem.
 
-- From the transactions we can compute the current value of each account
+## Example of a Smart Contract in Solidity:
 
-- Every transaction can be seen as a state transition
+Here's a simplified ERC-20 token contract written in Solidity:
 
-- Every transaction are actually a bit more that a plain transaction, there is a bit of code that is executed, written in Bitcoin script, a language that is not Turing complete
-https://en.bitcoin.it/wiki/Script
+````solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-- Ethereum goal was to generalise this idea of a blockchain as a state transition, see https://ethereum.org/en/whitepaper/
+/**
+ * @title ERC20Basic
+ * @dev Simpler version of ERC20 interface
+ * @dev see https://eips.ethereum.org/EIPS/eip-20
+ */
+contract ERC20Basic {
+    string public constant name = "BasicToken";
+    string public constant symbol = "BT";
+    uint8 public constant decimals = 18;
 
--> Give more explanation of the Ethereum whitepaper and the idea of a state transition and how the world state is stored in the blockchain, and the difference with Bitcoin
+    event Transfer(address indexed from, address indexed to, uint256 value);
 
-- Ethereum is a blockchain with a built-in Turing-complete programming language, Soldity, meaning that it can run any algorithm
+    mapping(address => uint256) balances;
 
--> Give more explanation of Solidity syntax
+    uint256 totalSupply_;
 
-- Ethereum can then allowed complex transactions, smart-contracts, decentralized applications (dApps)
+    constructor(uint256 total) {
+        totalSupply_ = total;
+        balances[msg.sender] = totalSupply_;
+    }
 
-- Such as Bitcoin for which every transation cost a fees, Ethereum has a fees for every instruction executed, called gas
+    function totalSupply() public view returns (uint256) {
+        return totalSupply_;
+    }
 
-- Considering the amount of gas used by a program develop in Solidity is critical, and Solidty compiler will give you an estimation of the gas used by your program
+    function transfer(address _to, uint256 _value) public returns (bool) {
+        require(_to != address(0));
+        require(_value <= balances[msg.sender]);
 
-- "Smart contracts" or "dApps" are actually just instances of class whose member functions and member attributes are stored in the blockchain and can be called using messages
+        balances[msg.sender] = balances[msg.sender] - _value;
+        balances[_to] = balances[_to] + _value;
+        emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
 
-- Ethereum is a distributed virtual machine, meaning that every node of the network execute the same code, and the state of the virtual machine is stored in the blockchain
-
-
-
-
-
-
-
+    function balanceOf(address _owner) public view returns (uint256) {
+        return balances[_owner];
+    }
+}
+```

@@ -136,29 +136,26 @@ async function generateImage() {
     const apiKeyInput = document.getElementById("dreamstudio-api-key");
     const promptInput = document.getElementById("image-description");
     const apiKey = apiKeyInput.value;
-    const prompt = promptInput.value;
+    const title = promptInput.value;
     const generateImageButton = document.getElementById(
       "generate-image-button"
     );
     generateImageButton.disabled = true;
-    const blob = await fetchImageFromDreamStudio(url, apiKey, prompt);
+    const blob = await fetchImageFromDreamStudio(url, apiKey, title);
     const generatedImageURL = URL.createObjectURL(blob);
     localStorage.setItem("generatedImage", generatedImageURL);
+    const image = localStorage.getItem("generatedImage");
+    updateProperty("generated-image", "src", image);
+    updateProperty("generated-image-title", "textContent", title);
+    updateDisplay("generated-image", "block");
+    updateDisplay("store-image-form", "block");
   } catch (error) {
     console.error(error);
     const generateImageButton = document.getElementById(
       "generate-image-button"
     );
     generateImageButton.disabled = false;
-    return;
   }
-
-  const image = localStorage.getItem("generatedImage");
-
-  updateProperty("generated-image", "src", image);
-  updateProperty("generated-image-title", "textContent", prompt);
-  updateDisplay("generated-image", "block");
-  updateDisplay("store-image-form", "block");
 }
 
 /**
@@ -247,7 +244,7 @@ async function storeImageOnIPFS() {
     ipfsHashDisplay.setAttribute("ipfs-hash", ipfsHash);
     updateMessage(
       "ipfs-hash",
-      `Image stored on IPFS with hash: <strong>${ipfsHash}</strong>`
+      `Image stored on IPFS with hash: <strong><a href="https://ipfs.io/ipfs/${ipfsHash}">${ipfsHash}</strong>`
     );
   } catch (error) {
     const storeImageButton = document.getElementById("store-image-button");
@@ -352,6 +349,7 @@ async function checkContractAddress() {
     console.log(`name: ${contractName}`);
     contractAddressInput.disabled = true;
     updateDisplay("contract-address-submit", "none");
+    updateDisplay("menu-item-set-up", "block");
     updateDisplay("menu-item-show-nfts", "block");
     updateDisplay("generate-wallet-form", "block");
     updateMessage(
@@ -393,12 +391,12 @@ async function mintNFT() {
   try {
     const mintButton = document.getElementById("mint-button");
     mintButton.disabled = true;
-    const details = getContractDetails();
+    const { contract, toAddress, title, ipfsHash } = getContractDetails();
 
-    const tx = await details.contract.mint(
-      details.toAddress,
-      details.title,
-      details.ipfsHash
+    const tx = await contract.mint(
+      toAddress,
+      title,
+      ipfsHash,
     );
     console.log("Mining... please wait.");
     await tx.wait();
@@ -459,7 +457,7 @@ async function loadNFTs() {
 function getContractDetails() {
   const provider = new ethers.providers.JsonRpcProvider();
   const privateKey = document.getElementById("private-key").value;
-  const wallet = new ethers.Wallet(privateKey, provider);
+  const admin = new ethers.Wallet(privateKey, provider);
   const contractAddress = document.getElementById("contract-address").value;
   const abi = localStorage.getItem("abi");
   const toAddress = document
@@ -469,7 +467,7 @@ function getContractDetails() {
   const ipfsHash = document
     .getElementById("ipfs-hash")
     .getAttribute("ipfs-hash");
-  const contract = new ethers.Contract(contractAddress, abi, wallet);
+  const contract = new ethers.Contract(contractAddress, abi, admin);
 
   return { contract, toAddress, title, ipfsHash };
 }
