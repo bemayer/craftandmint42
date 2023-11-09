@@ -290,7 +290,6 @@ async function checkPrivateKey() {
     const privateKey = privateKeyInput.value;
     const provider = new ethers.providers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
     const wallet = new ethers.Wallet(privateKey, provider);
-    const address = await wallet.getAddress();
     const balanceWei = await wallet.getBalance();
     const balanceEther = ethers.utils.formatEther(balanceWei);
     privateKeyInput.disabled = true;

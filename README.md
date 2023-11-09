@@ -64,41 +64,36 @@ Now that you have a running Hardhat node and a deployed contract, you can intera
 
 ```javascript
 // Import ethers library
-const { ethers } = require('ethers');
+const { ethers, JsonRpcProvider } = require('ethers');
+
+const YOUR_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+const CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const RECIPIENT_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
+const TOKEN_TITLE = '<TOKEN_TITLE>';
+const IPFS_HASH_OF_ARTWORK = '<IPFS_HASH_OF_ARTWORK>';
+const TOKEN_ID = 0;
 
 // This JSON should contain the ABI of the contract.
 const abi = require('./deployment/abi.json');
 
 // Set up the provider by connecting to the local node
-const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
+const provider = new JsonRpcProvider('http://localhost:8545');
 
 // Create a wallet instance using a private key and connect it to the provider
-const wallet = new ethers.Wallet('<YOUR_PRIVATE_KEY>', provider);
+const wallet = new ethers.Wallet(YOUR_PRIVATE_KEY, provider);
 
 // Create a contract instance connected to the wallet
-const contractAddress = '<CONTRACT_ADDRESS>';
-const contract = new ethers.Contract(contractAddress, abi, wallet);
+const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, wallet);
 
 // Function to mint a new token
 async function mintToken(to, title, ipfsHash) {
-  // Call the mint function of the contract
-  const transaction = await contract.mint(to, title, ipfsHash);
-  console.log(`Transaction hash: ${transaction.hash}`);
+	// Call the mint function of the contract
+	const transaction = await contract.mint(to, title, ipfsHash);
+	console.log(`Transaction hash: ${transaction.hash}`);
 
-  // Wait for the transaction to be confirmed
-  const receipt = await transaction.wait();
-  console.log(`Transaction confirmed in block: ${receipt.blockNumber}`);
-}
-
-// Function to transfer a token
-async function transferToken(to, tokenId) {
-  // Call the transfer function of the contract
-  const transaction = await contract.transfer(to, tokenId);
-  console.log(`Transaction hash: ${transaction.hash}`);
-
-  // Wait for the transaction to be confirmed
-  const receipt = await transaction.wait();
-  console.log(`Token ID ${tokenId} transferred to ${to}`);
+	// Wait for the transaction to be confirmed
+	const receipt = await transaction.wait();
+	console.log(`Transaction confirmed in block: ${receipt.blockNumber}`);
 }
 
 // Function to get total number of NFTs minted
@@ -117,16 +112,13 @@ async function getNFTInfo(tokenId) {
 (async () => {
   try {
     // Mint a new token
-    await mintToken('<RECIPIENT_ADDRESS>', 'Artwork Title', '<IPFS_HASH_OF_ARTWORK>');
-
-    // Transfer a token
-    await transferToken('<RECIPIENT_ADDRESS>', '<TOKEN_ID>');
+    await mintToken(RECIPIENT_ADDRESS, TOKEN_TITLE, IPFS_HASH_OF_ARTWORK);
 
     // Get total number of NFTs
     await getTotalNFTs();
 
     // Get information about a specific NFT
-    await getNFTInfo('<TOKEN_ID>');
+    await getNFTInfo(TOKEN_ID);
   } catch (error) {
     console.error(error);
   }
