@@ -52,6 +52,7 @@ This project demonstrates a basic Hardhat use case. It comes with a smart contra
 Run the following commands to try it out:
 
 ```shell
+npm install
 npx hardhat help
 npx hardhat test
 REPORT_GAS=true npx hardhat test # Estimation of cost by operation can be computed here https://www.cryptoneur.xyz/en/gas-fees-calculator/
