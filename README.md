@@ -2,13 +2,12 @@
 
 https://github.com/bemayer/craftandmint42/assets/7115101/c080625e-c8d2-4013-9fc6-e53fa18fdb71
 
-This project is a ERC-721 smart contract with a minimalist frontend interface using just vanilla HTML and Javascript, and the CSS from MVP.css to interact with it, to generate AI-generated images with Dreamstudio, save them to IPFS using Pinata and mint them as NFTs on the Ethereum blockchain.
-
-## Overview
 *CraftAndMint42* consists of an ERC-721 smart contract for minting NFTs, paired with a simple web interface created with basic HTML, JavaScript, and MVP.css for styling. It allows users to create AI-generated images using Dreamstudio, store them on IPFS via Pinata, and then mint these images as NFTs on the Ethereum blockchain.
 
-This project was created as part of the Tokenizer assignment at 42 school. The subject was designed with insights from [BNB Chain](https://www.bnbchain.org/), the world's largest smart-contract blockchain. It aims to train students building a practical experience in blockchain technology by establishing their own token ecosystem.
+The contract is deployed on the [Binance Smart Chain Testnet](https://testnet.bscscan.com/address/0x1f291314854B36957015Aa5005c15F14808DAdeC).
 
+## Overview
+This project was created as part of the Tokenizer assignment at 42 school. The subject was designed with insights from [BNB Chain](https://www.bnbchain.org/), the world's largest smart-contract blockchain. It aims to train students building a practical experience in blockchain technology by establishing their own token ecosystem.
 
 ## Project Name
 The project is called *CraftAndMint42*, a name that blends the two main features. "Craft" refers to the use of the AI tool MemberStudio to create unique images from a prompt. "Mint" is about turning these images into unique, blockchain-based Non-Fungible Tokens (NFTs).

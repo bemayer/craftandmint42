@@ -49,7 +49,7 @@ contract CraftAndMint42 is ERC721URIStorage {
         _nextTokenId++;
         _mint(to, tokenId);
         string memory uri = string(
-            abi.encodePacked("https://gateway.ipfs.io/ipfs/", ipfsHash)
+            abi.encodePacked("https://ipfs.io/ipfs/", ipfsHash)
         );
         _setTokenURI(tokenId, uri);
         _nftInfos[tokenId] = NftInfo({owner: to, title: title, uri: uri});

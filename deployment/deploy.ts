@@ -1,6 +1,11 @@
 import { ethers } from "hardhat";
 import * as fs from 'fs';
 
+/**
+ * Deploys the contract and writes the ABI and contract address to the deployment folder.
+ *
+ * To deploy to bnb testnet, run `npx hardhat run deployment/deploy.ts --network bsctestnet`.
+ */
 async function main() {
   const craftAndMint42 = await ethers.deployContract("CraftAndMint42");
 
@@ -17,8 +22,6 @@ async function main() {
   );
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;

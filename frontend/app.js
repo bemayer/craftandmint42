@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// @ts-check
 
 /**
  * NAVIGATION
@@ -75,7 +74,6 @@ async function checkDreamStudioBalance(apiKey) {
     }
 
     const { credits } = await response.json();
-    console.log("credits: ", credits);
     return credits;
   } catch (error) {
     console.error(error);
@@ -86,12 +84,13 @@ async function checkDreamStudioBalance(apiKey) {
 /**
  * Fetch image from DreamStudio using the provided URL, API key, and text description.
  *
- * @param {string} url - The API URL.
  * @param {string} apiKey - The API key for authentication.
  * @param {string} text - The text description for generating the image.
  * @returns {Promise<Blob>} - The generated image as a Blob.
  */
-async function fetchImageFromDreamStudio(url, apiKey, text) {
+async function fetchImageFromDreamStudio(apiKey, text) {
+  const url =
+    "https://api.stability.ai/v1/generation/stable-diffusion-512-v2-1/text-to-image";
   const requestOptions = {
     method: "POST",
     headers: {
@@ -108,7 +107,7 @@ async function fetchImageFromDreamStudio(url, apiKey, text) {
       cfg_scale: 7,
       height: 512,
       width: 512,
-      steps: 30,
+      steps: 50,
       samples: 1,
     }),
   };
@@ -131,8 +130,6 @@ async function fetchImageFromDreamStudio(url, apiKey, text) {
  */
 async function generateImage() {
   try {
-    const url =
-      "https://api.stability.ai/v1/generation/stable-diffusion-512-v2-1/text-to-image";
     const apiKeyInput = document.getElementById("dreamstudio-api-key");
     const promptInput = document.getElementById("image-description");
     const apiKey = apiKeyInput.value;
@@ -141,7 +138,7 @@ async function generateImage() {
       "generate-image-button"
     );
     generateImageButton.disabled = true;
-    const blob = await fetchImageFromDreamStudio(url, apiKey, title);
+    const blob = await fetchImageFromDreamStudio(apiKey, title);
     const generatedImageURL = URL.createObjectURL(blob);
     localStorage.setItem("generatedImage", generatedImageURL);
     const image = localStorage.getItem("generatedImage");
@@ -188,7 +185,6 @@ async function checkPinataCredentials() {
     }
 
     const data = await response.json();
-    console.log("Pinata authentication successful:", data);
     updateDisplay("pinata-credentials-submit", "none");
     apiKeyInput.disabled = true;
     updateMessage(
@@ -223,8 +219,6 @@ async function storeImageOnIPFS() {
       body,
     };
 
-    console.log(options);
-
     const response = await fetch(
       "https://api.pinata.cloud/pinning/pinFileToIPFS",
       options
@@ -237,7 +231,6 @@ async function storeImageOnIPFS() {
 
     const data = await response.json();
     const ipfsHash = data.IpfsHash;
-    console.log("IPFS Hash:", ipfsHash);
     updateDisplay("store-image-button", "none");
     updateDisplay("mint-form", "block");
     const ipfsHashDisplay = document.getElementById("ipfs-hash");
@@ -295,13 +288,11 @@ async function checkPrivateKey() {
     privateKeyButton.disabled = true;
     const privateKeyInput = document.getElementById("private-key");
     const privateKey = privateKeyInput.value;
-    const provider = new ethers.providers.JsonRpcProvider();
+    const provider = new ethers.providers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
     const wallet = new ethers.Wallet(privateKey, provider);
     const address = await wallet.getAddress();
     const balanceWei = await wallet.getBalance();
     const balanceEther = ethers.utils.formatEther(balanceWei);
-    console.log(`address: ${address}`);
-    console.log(`balance: ${balanceEther.toString()}`);
     privateKeyInput.disabled = true;
     updateDisplay("private-key-submit", "none");
     updateDisplay("contract-abi-file", "block");
@@ -340,13 +331,11 @@ async function checkContractAddress() {
     contractAddressButton.disabled = true;
     const contractAddressInput = document.getElementById("contract-address");
     const abi = localStorage.getItem("abi");
-    console.log(`abi: ${abi}`);
 
     const contractAddress = contractAddressInput.value;
-    const provider = new ethers.providers.JsonRpcProvider();
+    const provider = new ethers.providers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
     const contract = new ethers.Contract(contractAddress, abi, provider);
     const contractName = await contract.name();
-    console.log(`name: ${contractName}`);
     contractAddressInput.disabled = true;
     updateDisplay("contract-address-submit", "none");
     updateDisplay("menu-item-set-up", "block");
@@ -371,8 +360,6 @@ async function checkContractAddress() {
  */
 function generateWallet() {
   const wallet = ethers.Wallet.createRandom();
-  console.log(`address: ${wallet.address}`);
-  console.log(`private key: ${wallet.privateKey}`);
   const generatedWallet = document.getElementById("generated-wallet");
   generatedWallet.setAttribute("wallet-address", wallet.address);
   updateMessage(
@@ -393,14 +380,8 @@ async function mintNFT() {
     mintButton.disabled = true;
     const { contract, toAddress, title, ipfsHash } = getContractDetails();
 
-    const tx = await contract.mint(
-      toAddress,
-      title,
-      ipfsHash,
-    );
-    console.log("Mining... please wait.");
+    const tx = await contract.mint(toAddress, title, ipfsHash);
     await tx.wait();
-    console.log("Mint successful!");
     updateMessage("display-mint", "Mint successful!");
     updateDisplay("mint-button", "none");
   } catch (error) {
@@ -455,7 +436,7 @@ async function loadNFTs() {
  * @returns {ContractDetails} mintingDetails An object containing the necessary details for minting.
  */
 function getContractDetails() {
-  const provider = new ethers.providers.JsonRpcProvider();
+  const provider = new ethers.providers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
   const privateKey = document.getElementById("private-key").value;
   const admin = new ethers.Wallet(privateKey, provider);
   const contractAddress = document.getElementById("contract-address").value;

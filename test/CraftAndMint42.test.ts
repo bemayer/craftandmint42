@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
 const IPFS_HASH = "hash";
-const TOKEN_FIRST_URI = `https://gateway.ipfs.io/ipfs/${IPFS_HASH}`;
+const TOKEN_FIRST_URI = `https://ipfs.io/ipfs/${IPFS_HASH}`;
 const TOKEN_FIRST_TITLE = "First Token";
 
 async function deploy() {
