@@ -8,11 +8,11 @@
 
 **Transactions as State Transitions:** Each transaction on the blockchain represents a change in state, transitioning from one balance to another. By processing these transitions, the current value of each account can be determined.
 
-**Bitcoin Script:** Bitcoin transactions include a scripting language which is executed during the transaction. This language, known as Bitcoin Script, is not Turing complete, meaning it can't solve all computational problems, but it's sufficient for creating conditional transactions. (Source : [Bitcoin Wiki](https://en.bitcoin.it/wiki/Script))
+**Bitcoin Script:** Bitcoin transactions include a scripting language which is executed during the transaction. This language, known as Bitcoin Script, is not Turing complete, meaning it can't solve all computational problems, but it's sufficient for creating conditional transactions. (Source: [Bitcoin Wiki](https://en.bitcoin.it/wiki/Script))
 
 ## Ethereum and Its Innovations
 
-**Expanding the Blockchain Concept:** Ethereum's whitepaper conceptualized the blockchain as a more flexible state transition system. Unlike Bitcoin, which primarily tracks currency movement, Ethereum's state encompasses a wider range of information, including the code of smart contracts and their internal states.
+**Expanding the Blockchain Concept:** Ethereum's Whitepaper conceptualized the blockchain as a more flexible state transition system. Unlike Bitcoin, which primarily tracks currency movement, Ethereum's state encompasses a wider range of information, including the code of smart contracts and their internal states. (Source: [Ethereum's Whitepaper](https://ethereum.org/en/whitepaper/))
 
 **Solidity and Turing Completeness:** Solidity is Ethereum's native programming language, designed for creating smart contracts. It's Turing complete, which allows it to execute any computable function, paving the way for more complex applications like dApps.
 
