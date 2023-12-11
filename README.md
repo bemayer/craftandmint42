@@ -28,7 +28,7 @@ Testing of the smart contract is conducted using the testing framework integrate
 Additionally, GitHub Actions are implemented to systematically conduct tests upon each new code push to the repository.
 
 ## Smart Contract Address and Network
-- *Smart Contract Address*: 0x123...
+- *Smart Contract Address*: `0x1f291314854B36957015Aa5005c15F14808DAdeC`
 - *Network*: BNB Smart Chain Testnet
 
 ## Token Ticker
