@@ -394,10 +394,10 @@ $$
 Another value given for *secp256k1* curve is its cofactor $h$, which is defined as:
 
 $$
-h = \frac{\#E(\mathbb{F}_p)}{n}
+h = \frac{|E(\mathbb{F}_p)|}{n}
 $$
 
-where $\#E(\mathbb{F}_p)$ is the number of points on the curve over the field $\mathbb{F}_p$.
+where $|E(\mathbb{F}_p)|$ is the number of points on the curve over the field $\mathbb{F}_p$.
 
 For *secp256k1*, $h = 1$, meaning that the number of points on the curve is equal to the order of the base point.
 
