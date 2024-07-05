@@ -124,3 +124,22 @@ async function getNFTInfo(tokenId) {
   }
 })();
 ```
+
+## Useful Resources
+For further reading and understanding, here are some valuable resources:
+
+### Websites
+- **Learn Ethereum**: A comprehensive resource for learning about Ethereum, covering everything from the basics to advanced concepts. [Learn Ethereum](https://ethereum.org/en/learn/)
+- **Learn EVM (Ethereum Virtual Machine)**: To discover the advanced technical intricacies of the Ethereum Virtual Machine, the foundation of not only Ethereum but also Polygon, Binance, Avalanche, or Cardano. [LearnEVM](https://learnevm.com/)
+- **Solidity Documentation**: The best resource for learning Solidity, including "Solidity by Example" with project examples and code snippets. [Solidity Docs](https://docs.soliditylang.org/en/)
+- **OpenZeppelin**: The most used library of secure, community-vetted smart contract templates. Use the [OpenZeppelin Wizard](https://wizard.openzeppelin.com/) to create custom contracts from their templates. [OpenZeppelin](https://docs.openzeppelin.com/)
+- **Ethereum Improvement Proposals (EIPs)**: Official standards defined by the Ethereum consortium, such as ERC-20 for standard tokens and ERC-721 for NFTs. [EIPs](https://eips.ethereum.org/all)
+- **JSON-RPC**: The protocol used for interacting with EVM nodes. [Ethereum JSON-RPC Specification](https://ethereum.github.io/execution-apis/api-documentation/)
+- **Alchemy**: A provider offering stable and fast access to Ethereum nodes with a robust free tier. The most complete documentation I could find. [Alchemy Docs](https://docs.alchemy.com/)
+- **ethers.js**: The reference JavaScript library for interacting with an EVM blockchain. [ethers.js Documentation](https://docs.ethers.org/)
+- **Hardhat**: A development environment for EVM with comprehensive tools and tutorials. [Hardhat](https://hardhat.org/docs)
+
+### Books
+- Bahga, A., & Madisetti, V. (2022). *Mastering Blockchain: A technical reference guide to the inner workings of blockchain, from cryptography to DeFi and NFTs* (4th ed.). Packt Publishing. ISBN 9781803241067. [Packt](https://www.packtpub.com/en-us/product/mastering-blockchain-9781803241067)
+- Washington, L. C. (2012). *Elliptic Curves: Number Theory and Cryptography* (2nd ed.). CRC Press. ISBN 9781138088615. [Routledge](https://www.routledge.com/Elliptic-Curves-Number-Theory-and-Cryptography/Washington/p/book/9781138088615)
+- Cohen, H., Frey, G., Avanzi, R., Doche, C., Lange, T., Nguyen, K., & Vercauteren, F. (2006). *Handbook of Elliptic and Hyperelliptic Curve Cryptography*. CRC Press. ISBN 9781584885184. [Routledge](https://www.routledge.com/Handbook-of-Elliptic-and-Hyperelliptic-Curve-Cryptography/Cohen-Frey-Avanzi-Doche-Lange-Nguyen-Vercauteren/p/book/9781584885184)
