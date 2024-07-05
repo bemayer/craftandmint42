@@ -1,6 +1,6 @@
 # CraftAndMint42
 
-https://github.com/bemayer/craftandmint42/assets/7115101/c080625e-c8d2-4013-9fc6-e53fa18fdb71
+https://github.com/bemayer/craftandmint42/assets/7115101/78f0ca7b-1d67-4478-bc99-a74c111cf827
 
 *CraftAndMint42* consists of an ERC-721 smart contract for minting NFTs, paired with a simple web interface created with basic HTML, JavaScript, and MVP.css for styling. It allows users to create AI-generated images using Dreamstudio, store them on IPFS via Pinata, and then mint these images as NFTs on the Ethereum blockchain.
 
