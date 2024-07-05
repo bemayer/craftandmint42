@@ -30,7 +30,7 @@ Additionally, GitHub Actions are implemented to systematically conduct tests upo
 ## Smart Contract Address and Network
 - *Smart Contract Address*: `0x1f291314854B36957015Aa5005c15F14808DAdeC`
 - *Network*: BNB Smart Chain Testnet
-- *EtherScan* : (https://testnet.bscscan.com/address/0x1f291314854B36957015Aa5005c15F14808DAdeC)[https://testnet.bscscan.com/address/0x1f291314854B36957015Aa5005c15F14808DAdeC]
+- *EtherScan* : [https://testnet.bscscan.com/address/0x1f291314854B36957015Aa5005c15F14808DAdeC](https://testnet.bscscan.com/address/0x1f291314854B36957015Aa5005c15F14808DAdeC)
 
 ## Token Ticker
 The ticker symbol for the token within the CraftAndMint42 ecosystem is CM42.
