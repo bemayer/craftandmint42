@@ -38,7 +38,7 @@
       <h1>Set up</h1>
       <form id="dreamstudio-api-key-form" onsubmit="event.preventDefault(); checkDreamstudioAPIKey()">
         <label>DreamStudio API Key</label>
-        <input type="text" id="dreamstudio-api-key" name="dreamstudio-api-key"
+        <input type="password" id="dreamstudio-api-key" name="dreamstudio-api-key"
           placeholder="Enter DreamStudio API key" />
         <button type="submit" id="dreamstudio-api-key-submit">Submit</button>
         <div id="display-credits"></div>
@@ -52,7 +52,7 @@
 
       <form id="private-key-form" onsubmit="event.preventDefault(); checkPrivateKey()">
         <label>Contract Admin Private Key on BNB Testnet</label>
-        <input type="text" id="private-key" name="private-key" placeholder="Enter Private Key" />
+        <input type="password" id="private-key" name="private-key" placeholder="Enter Private Key" />
         <button type="submit" id="private-key-submit">Submit</button>
         <div id="display-balance"></div>
       </form>
@@ -84,7 +84,7 @@
 
       <form id="pinata-credentials-form" onsubmit="event.preventDefault(); checkPinataCredentials()">
         <label>Pinata API Key</label>
-        <input type="text" id="pinata-api-key" name="pinata-api-key" placeholder="Enter Pinata API key" />
+        <input type="password" id="pinata-api-key" name="pinata-api-key" placeholder="Enter Pinata API key" />
         <button type="submit" id="pinata-credentials-submit">Submit</button>
         <div id="display-pinata-credentials"></div>
       </form>
