@@ -40,11 +40,10 @@ The token serves several purposes within the MintAndCraft42 ecosystem:
 
 ## Documentation
 In the documentation folder, you will find the following all my notes:
-- Overview of the Ethereum blockchain, the token standards, and the process of developing a smart contract
-- Mathematical refreshers on cryptography and hashing
+- [Mathematical refreshers on cryptography and hashing](https://github.com/bemayer/craftandmint42/blob/master/documentation/Mathematical%20and%20Technical%20Exploration%20of%20Ethereum%20Blockchain.md)
   - Hash Functions: Cryptographic hash functions like Keccak-256 are widely used in Ethereum. They take an input and return a fixed-size string of bytes, typically a digest that represents the data. They are used for data integrity checks and in the formation of Merkle Trees.
   - Public-Key Cryptography: Ethereum uses Elliptic Curve Digital Signature Algorithm (ECDSA) for generating public-private key pairs. This allows users to sign transactions and helps to verify the identity of the sender.
-
+- [Overview of the Ethereum blockchain, the token standards, and the process of developing a smart contract](https://github.com/bemayer/craftandmint42/blob/master/documentation/Practical%20Guide%20to%20Ethereum%20Blockchain%20and%20Development.md)
 
 ## Interacting with the Smart Contract
 
