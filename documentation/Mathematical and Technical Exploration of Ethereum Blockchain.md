@@ -329,20 +329,20 @@ When you add any point on the elliptic curve to the point at infinity, you get t
 
 1. Convert the scalar $\lambda$ to its binary representation.
 
-2. Starting from the leftmost bit, double the result and add the point $P$ if the bit is 1.
+2. Starting from the leftmost bit, double the result and add the point $P$ if the bit is $1$.
 
 3. Continue until all bits have been processed.
 
 Example:
 
-Suppose we want to calculate $10P$. The binary representation of 10 is 0b1010. The double-and-add algorithm proceeds as follows:
+Suppose we want to calculate $10P$. The binary representation of $10$ is $0b1010$. The double-and-add algorithm proceeds as follows:
 
 - Start with $R = P$.
 
-- Now go through each bit of the binary representation of 10, starting from the leftmost bit:
-    - First bit (2nd from left) is 0: Double $R$ to get $2P$.
-    - Second bit is 1: Double $R$ to get $4P$ and add $P$ to get $5P$.
-    - Third bit is 0: Double $R$ to get $10P$.
+- Now go through each bit of the binary representation of $10$, starting from the leftmost bit:
+    - First bit (2nd from left) is $0$: Double $R$ to get $2P$.
+    - Second bit is $1$: Double $R$ to get $4P$ and add $P$ to get $5P$.
+    - Third bit is $0$: Double $R$ to get $10P$.
 
 The result is $10P$, as desired.
 
@@ -475,38 +475,20 @@ In the steps below, $H(m)$ refers to the hash of a message $m$ that is to be sig
 To sign a message $m$ using the $\text{Private Key}$:
 
 1. Choose a random scalar $\lambda$ from the range $[1, n-1]$
-2. Compute the point $P$ on the elliptic curve:
-$$
-R = \lambda G
-$$
+2. Compute the point $P$ on the elliptic curve: $R = \lambda G$
 3. With $R=(x_r,y_r)$, check that $r = x_r \mod n \neq 0$, if so, go back to step 1.
 
-4. Compute the signature $s$, if $s = 0$, go back to step 1:
-$$
-s = \lambda^{-1}(H(m) + r \cdot \text{Private Key}) \mod n
-$$
+4. Compute the signature $s$, if $s = 0$, go back to step 1: $s = \lambda^{-1}(H(m) + r \cdot \text{Private Key}) \mod n$
 5. The signature is the pair $(r, s)$.
 
 #### Signature Verification
 
 To verify a signature $(r, s)$ of a message $m$ using the $\text{Public Key}$:
 
-1. Compute the modular inverse of $s$:
-$$
-w = s^{-1} \mod n
-$$
-2. Compute $u_1$:
-$$
-u_1 = w \cdot H(m) \mod n
-$$
-3. Compute $u_2$:
-$$
-u_2 = w \cdot r \mod n
-$$
-4. Compute the verification point $V$:
-$$
-V = u_1 \cdot G + u_2 \cdot \text{Public Key}
-$$
+1. Compute the modular inverse of $s$: $w = s^{-1} \mod n$
+2. Compute $u_1$: $u_1 = w \cdot H(m) \mod n$
+3. Compute $u_2$: $u_2 = w \cdot r \mod n$
+4. Compute the verification point $V$: $V = u_1 \cdot G + u_2 \cdot \text{Public Key}$
 5. With $V=(x_v,y_v)$, if $r = x_v \mod n$  (i.e. $V=R$) the signature is valid, meaning that the message $m$ was signed by the owner of the $\text{Private Key}$
 
 
